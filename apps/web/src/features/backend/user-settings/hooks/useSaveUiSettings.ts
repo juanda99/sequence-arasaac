@@ -10,13 +10,14 @@
 // pot fer. Però abans d'avisar ningú es mira si val la pena tornar-ho a provar sol.
 import { useCallback, useRef, useState } from "react";
 import { useIntl } from "react-intl";
-import { useAppDispatch } from "../../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { saveUserUiThunk } from "../store/settingsThunks";
 import { refreshQuotaThunk } from "../store/quotaSlice";
 import { useFeedback } from "../../../../context/FeedbackContext/FeedbackContext";
 import messages from "../../../../Modals/DefaultSettingsModal/UserSettingsPanel.lang";
 import { RequestFailure } from "@features/backend/api/requestFailure";
 import { reportClientError } from "@features/backend/api/clientErrorReport";
+import { selectIsLoggedIn } from "@features/backend/auth/store/authSelectors";
 
 // Marge perquè un servei que s'està engegant tingui temps d'acabar d'arrencar.
 // Amb menys, el reintent cau dins la mateixa finestra dolenta i no serveix de res.
@@ -42,6 +43,9 @@ export const useSaveUiSettings = (): UseSaveUiSettings => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
   const { showSnackbar } = useFeedback();
+  // Qui decideix si el desat va al compte o al navegador; el refresc del consum
+  // en penja igual que el desat mateix
+  const isLoggedIn = useAppSelector(selectIsLoggedIn);
 
   const [failure, setFailure] = useState<RequestFailure | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
@@ -55,8 +59,14 @@ export const useSaveUiSettings = (): UseSaveUiSettings => {
 
     if (saveUserUiThunk.fulfilled.match(result)) {
       // El vocabulari pot haver pujat o tret imatges: el consum del compte ja
-      // no és el que deia abans de desar
-      void dispatch(refreshQuotaThunk());
+      // no és el que deia abans de desar.
+      //
+      // Només quan el desat hi ha anat de debò. Sense sessió —i, per tant,
+      // sempre amb les funcions de compte apagades— el que s'acaba de desar és
+      // al navegador: no hi ha cap consum que hagi canviat, i la petició només
+      // servia per despertar Render i, passats els 3 s del llindar, encendre
+      // l'avís de «Connectant amb el teu compte…» a qui no en té cap.
+      if (isLoggedIn) void dispatch(refreshQuotaThunk());
       showSnackbar({
         message: intl.formatMessage(messages.saveSuccess),
         severity: "success",
@@ -74,7 +84,7 @@ export const useSaveUiSettings = (): UseSaveUiSettings => {
       isTransient: false,
       detail: result.error?.message?.slice(0, 300),
     };
-  }, [dispatch, intl, showSnackbar]);
+  }, [dispatch, intl, showSnackbar, isLoggedIn]);
 
   const saveInBackground = useCallback((): void => {
     if (isSavingRef.current) return;
