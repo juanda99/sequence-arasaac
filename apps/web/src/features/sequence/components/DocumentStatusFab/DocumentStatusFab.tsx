@@ -46,6 +46,7 @@ import ModalDownload from "@components/ButtonWithModalDownload/ModalDownload";
 import ConfirmDialog from "@components/ConfirmDialog/ConfirmDialog";
 import messages from "./DocumentStatusFab.lang";
 import { selectIsLoggedIn } from "@features/backend/auth/store/authSelectors";
+import { ACCOUNTS_ENABLED } from "@/configs/accountsConfig";
 
 const selectDocumentStatus = (state: RootState) => state.documentStatus;
 
@@ -170,7 +171,11 @@ const DocumentStatusFab = (): ReactElement => {
           : messages.hintStaleFile,
       );
     if (durability === "local" || durability === "saving")
-      return intl.formatMessage(messages.hintLocal);
+      // Amb les funcions de compte apagades el núvol no existeix: oferir-lo
+      // seria enviar l'usuari a una sortida que l'app no té
+      return intl.formatMessage(
+        ACCOUNTS_ENABLED ? messages.hintLocal : messages.hintLocalNoCloud,
+      );
     return null;
   })();
 

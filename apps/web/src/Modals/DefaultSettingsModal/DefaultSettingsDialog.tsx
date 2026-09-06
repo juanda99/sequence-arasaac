@@ -40,6 +40,7 @@ import React from "react";
 
 import { SettingsTab } from "../../types/ui";
 import { updateSettingsActiveTabActionCreator } from "@features/user-settings/store/uiSlice";
+import { ACCOUNTS_ENABLED } from "@/configs/accountsConfig";
 
 interface DefaultSettingsDialogProps {
   open: boolean;
@@ -67,6 +68,17 @@ const SETTINGS_TABS: SettingsTabDefinition[] = [
     message: messages.tabVocabulary,
   },
 ];
+
+/**
+ * Els tabs que es pinten de debò.
+ *
+ * El vocabulari personal viu al compte —s'hi desa i se sincronitza entre
+ * dispositius—, de manera que amb les funcions de compte apagades el tab només
+ * podria oferir la porta d'entrada a un compte que aquella compilació no té.
+ */
+const VISIBLE_SETTINGS_TABS: SettingsTabDefinition[] = ACCOUNTS_ENABLED
+  ? SETTINGS_TABS
+  : SETTINGS_TABS.filter(({ value }) => value !== "vocabulary");
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -140,7 +152,7 @@ const DefaultSettingsDialog = ({
               scrollButtons="auto"
               sx={{ ...tabsStyled, flex: 1 }}
             >
-              {SETTINGS_TABS.map(({ value, icon, message }) => (
+              {VISIBLE_SETTINGS_TABS.map(({ value, icon, message }) => (
                 <AppTab
                   key={value}
                   value={value}
@@ -185,7 +197,9 @@ const DefaultSettingsDialog = ({
 
           {activeTab === "view" && <ViewSettingsPanel ref={viewPanelRef} />}
 
-          {activeTab === "vocabulary" && <VocabularySettingsPanel />}
+          {ACCOUNTS_ENABLED && activeTab === "vocabulary" && (
+            <VocabularySettingsPanel />
+          )}
         </Container>
       </Dialog>
 

@@ -1815,8 +1815,12 @@
     "description": "Estat quan l'escriptura de l'esborrany falla"
   },
   "features.sequence.status.hintLocal": {
-    "defaultMessage": "Cela reste dans ce navigateur, qui peut l'effacer de lui-même. Téléchargez-le ou enregistrez-le dans le cloud pour le conserver ailleurs.",
+    "defaultMessage": "Cela reste dans ce navigateur, qui peut l'effacer de lui-même. Téléchargez-le ou enregistrez-le dans le cloud.",
     "description": "Explicació de què vol dir tenir la feina només a l'esborrany"
+  },
+  "features.sequence.status.hintLocalNoCloud": {
+    "defaultMessage": "Cela reste dans ce navigateur, qui peut l'effacer de lui-même. Téléchargez-le.",
+    "description": "Explicació de l'esborrany amb les funcions de compte apagades"
   },
   "features.sequence.status.hintStaleCloud": {
     "defaultMessage": "Ce qui est à l'écran n'est pas encore dans le cloud. Enregistrez-le à nouveau pour mettre à jour la copie.",
