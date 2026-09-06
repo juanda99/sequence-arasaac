@@ -313,8 +313,14 @@ I només s'aparten **si hi ha de què apartar-se**: la reserva la declara qui
 ocupa el racó (`useFloatingCorner`, del botó d'estat i de la fletxa de
 novetats) i l'avís la llegeix d'una variable CSS, com el contingut llegeix
 l'alçada del peu de `floatingInset`. A les pàgines sense control flotant
-—inici, registre, panell d'administració— l'avís es queda on el posa MUI
-(resol F13).
+—inici, registre, panell d'administració— l'avís es queda enganxat als dos
+cantons (resol F13).
+
+L'àncora, això sí, és la de la casa i no la de MUI: per sota de `sm` l'avís es
+posa a `FLOATING_EDGE_GAP` de baix i de l'esquerra. Els 8 px que MUI hi posa el
+deixaven caure per sota del botó d'estat i més a prop del cantó esquerre del que
+el botó és del dret, i les dues capes es veien com dues peces de la mateixa
+família mal col·locades (C19 del backlog).
 
 ### 4.6 Botons flotants
 
@@ -326,8 +332,8 @@ pintant el tint com a capa de `backgroundImage` damunt de `background.paper`:
 el color resultant és exactament el del toggle seleccionat, sense
 transparència.
 
-Una sola àncora per a tots (`bottom`/`right`/`left` de 16 px) i la mida del
-control de la casa (55 px; les accions del `SpeedDial`, 44, que és el mínim
+Una sola àncora per a tots (`bottom`/`right`/`left` de 16 px), que per sota de
+`sm` també és la dels avisos flotants, i la mida del control de la casa (55 px; les accions del `SpeedDial`, 44, que és el mínim
 WCAG de diana tàctil).
 
 ---

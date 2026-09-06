@@ -1258,6 +1258,26 @@ Branca `claude/backlog-branch-master-64uh75`.
   seu `labelId` i el `Switch` el reculli amb `inputProps={{ "aria-labelledby": labelId }}`. Així
   el nom surt del títol de la fila, com a la resta de controls.
 
+### C19 — L'avís de baix i el botó flotant no compartien la mateixa base en mòbil ✅ Resolta
+
+Branca `claude/mobile-snackbar-alignment-y9ykit`. *(Continuació de C7: allà es va resoldre
+l'encavalcament horitzontal; l'alineació vertical va quedar com estava.)*
+
+- **On**: `components/FloatingLayer/floatingLayer.styled.ts` — `floatingSnackbarSx`, que vesteix
+  els tres avisos de l'app (`FeedbackSnackbar`, `SessionExpiredNotice`, `BackendWakeUpNotice`).
+- **Per què importava**: per sota de `sm`, MUI ancora el `Snackbar` a `bottom: 8, left: 8` i
+  l'app ancora tot el que sura a `FLOATING_EDGE_GAP` (16). Quan l'avís i el `DocumentStatusFab`
+  comparteixen la franja de baix —que és sempre que es desa a l'editor o al visualitzador—, les
+  dues capes es veien com dues peces de la mateixa família mal col·locades: l'avís 8 px més
+  avall que el botó i 8 px més a prop del cantó esquerre que el botó del dret. L'estàndard ja
+  demanava «una sola àncora» per als botons flotants; els avisos no la seguien.
+- **Resolució**: `floatingSnackbarSx` posa `bottom` i `left` a `FLOATING_EDGE_GAP` per sota de
+  `sm`, i la reserva del racó (`FLOATING_CORNER_VARIABLE`) hi cau amb el mateix valor per defecte
+  quan no hi ha cap control de què apartar-se. A 390 px: l'avís va de `x = 16` a `x = 311` amb
+  base a 16, i el botó de `x = 319` a `x = 374` amb la mateixa base.
+- Fixat a `e2e/download-and-status.spec.ts`, que ara compara també les bases i els dos marges de
+  cantó, no només l'encavalcament.
+
 ---
 
 ## Novetats pendents de publicar
