@@ -7,6 +7,7 @@ import {
   CSS_PRINT_DPI,
 } from "@/types/PageFormat";
 import { appBackgrounds, printColors } from "@/style/palette";
+import { PRINT_COPYRIGHT_CLASS } from "@components/CopyRight/CopyRight";
 import { useFeedback } from "@/context/FeedbackContext";
 import {
   classifyRequestFailure,
@@ -163,6 +164,46 @@ const themeColorReplacements: Array<[RegExp, string]> = [
 ];
 
 /**
+ * Separació del peu de llicència respecte a les vores del full, en píxels de
+ * pàgina. A baix, els mateixos 10 px que li dona la regla `@media print` de
+ * `CopyRight`; als costats, els 12 px de `paddingInline` del full, perquè quedi
+ * alineat amb el contingut i no enganxat a la vora.
+ */
+const COPYRIGHT_BOTTOM_PX = 10;
+const COPYRIGHT_INLINE_PX = 12;
+
+/**
+ * Peu de llicència al PDF.
+ *
+ * El full imprès el porta des de sempre (ARASAAC demana que hi consti l'autoria
+ * dels pictogrames i la llicència), però el PDF en sortia sense: `CopyRight`
+ * només es mostra dins d'`@media print` i html2canvas clona el document en
+ * `media: screen`, on aquella regla no existeix. Aquí es fa visible al clon.
+ *
+ * `position: fixed` s'ha de convertir en `absolute`: html2canvas situa el que és
+ * fix respecte de la finestra, no del full, i el peu acabaria fora de la zona
+ * capturada. Amb el full com a bloc contenidor queda al peu de la pàgina, com a
+ * la impressió, i sense ocupar lloc a la seqüència.
+ *
+ * El color s'hi força perquè el peu és text del tema: en fosc és blanc i, tot i
+ * que `themeColorReplacements` ja el passaria a negre, aquí no costa res
+ * assegurar-ho —el PDF sempre és paper blanc amb tinta negra.
+ */
+const COPYRIGHT_FOOTER_CSS = `
+  .preview-content {
+    position: relative !important;
+  }
+  .preview-content .${PRINT_COPYRIGHT_CLASS} {
+    display: block !important;
+    position: absolute !important;
+    left: ${COPYRIGHT_INLINE_PX}px;
+    right: ${COPYRIGHT_INLINE_PX}px;
+    bottom: ${COPYRIGHT_BOTTOM_PX}px;
+    color: ${printColors.text} !important;
+  }
+`;
+
+/**
  * Hook per generar i descarregar la seqüència com a fitxer PDF.
  * Captura l'element .preview-content (dimensions reals, sense escala visual)
  * amb html2canvas i el converteix a PDF amb jsPDF.
@@ -239,13 +280,15 @@ export const useDownloadPdf = (pageFormat: PageFormat) => {
               el.textContent,
             );
           });
-          // Xarxa de seguretat: fons blanc garantit a la zona capturada
+          // Xarxa de seguretat: fons blanc garantit a la zona capturada, i peu
+          // de llicència visible (vegeu COPYRIGHT_FOOTER_CSS)
           const safetyStyle = clonedDoc.createElement("style");
           safetyStyle.textContent = `
             .preview-content,
             .preview-content .MuiPaper-root {
               background-color: ${printColors.background} !important;
             }
+            ${COPYRIGHT_FOOTER_CSS}
           `;
           clonedDoc.head.appendChild(safetyStyle);
         },
