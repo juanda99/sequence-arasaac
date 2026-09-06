@@ -89,8 +89,14 @@ const messages = defineMessages({
   hintLocal: {
     id: "features.sequence.status.hintLocal",
     defaultMessage:
-      "Es queda en aquest navegador i el pot esborrar sol. Descarrega-ho o desa-ho al núvol per tenir-ho en un altre lloc.",
+      "Es queda en aquest navegador i el pot esborrar sol. Descarrega-ho o desa-ho al núvol.",
     description: "Explicació de què vol dir tenir la feina només a l'esborrany",
+  },
+  hintLocalNoCloud: {
+    id: "features.sequence.status.hintLocalNoCloud",
+    defaultMessage:
+      "Es queda en aquest navegador i el pot esborrar sol. Descarrega-ho.",
+    description: "Explicació de l'esborrany amb les funcions de compte apagades",
   },
   hintStaleCloud: {
     id: "features.sequence.status.hintStaleCloud",

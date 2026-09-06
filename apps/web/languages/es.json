@@ -1815,8 +1815,12 @@
     "description": "Estat quan l'escriptura de l'esborrany falla"
   },
   "features.sequence.status.hintLocal": {
-    "defaultMessage": "Se queda en este navegador y puede borrarlo por su cuenta. Descárgalo o guárdalo en la nube para tenerlo en otro sitio.",
+    "defaultMessage": "Se queda en este navegador y puede borrarlo por su cuenta. Descárgalo o guárdalo en la nube.",
     "description": "Explicació de què vol dir tenir la feina només a l'esborrany"
+  },
+  "features.sequence.status.hintLocalNoCloud": {
+    "defaultMessage": "Se queda en este navegador y puede borrarlo por su cuenta. Descárgalo.",
+    "description": "Explicació de l'esborrany amb les funcions de compte apagades"
   },
   "features.sequence.status.hintStaleCloud": {
     "defaultMessage": "Lo que ves en pantalla todavía no está en la nube. Vuelve a guardarlo para actualizar la copia.",
