@@ -69,6 +69,10 @@ Tot el que sura per damunt de la pàgina. Font única de veritat:
   **calculada des dels tokens**. Abans era un 72 escrit a mà a partir dels 48 px
   del botó, i quan el botó ha canviat de mida el número ha deixat de quadrar sense
   que res ho digués.
+- **I amb la mateixa àncora que el que hi conviu**: per sota de `sm` l'avís es
+  posa a `FLOATING_EDGE_GAP` de baix i de l'esquerra, no als 8 px de MUI. Avís i
+  botó d'estat comparteixen la franja de baix; amb dues bases separades per 8 px
+  es veien com dues peces de la mateixa família mal col·locades (C19).
 - **Només s'aparta si hi ha de què apartar-se** (`useFloatingCorner`): qui ocupa
   el racó inferior dret declara la reserva mentre és a la pantalla —el botó
   d'estat a l'editor i al visualitzador, la fletxa dreta a les notícies— i l'avís
@@ -77,7 +81,8 @@ Tot el que sura per damunt de la pàgina. Font única de veritat:
   **tota** l'app: a la pantalla d'inici, on `BackendWakeUpNotice` també es munta
   —i on el desvetllament de Render és més probable, perquè és on es fa el primer
   login del dia—, l'avís sortia descentrat 79 px apartant-se de res. Sense cap
-  control al racó, l'avís es queda als 8 px que MUI li posa per defecte (F13).
+  control al racó, l'avís es queda enganxat als dos cantons, amb el mateix marge
+  a banda i banda (F13).
 - **El que no marxa sol, reserva espai** (`useFloatingInset`): una capa
   `position: fixed` no ocupa lloc al document, i quan la pàgina s'acaba l'última
   fila de pictogrames queda a sota sense cap scroll que la pugui apartar (F12).
@@ -105,7 +110,8 @@ Tot el que sura per damunt de la pàgina. Font única de veritat:
   flotant sura sobre el full, i amb transparència s'hi veurien passar els
   pictogrames per sota.
 - **Una sola àncora**: `FLOATING_EDGE_GAP` (16 px) del cantó, tant per al botó
-  d'estat com per a les fletxes de novetats.
+  d'estat com per a les fletxes de novetats —i, per sota de `sm`, també per als
+  avisos flotants, que hi comparteixen franja.
 
 ## Estat de migració
 

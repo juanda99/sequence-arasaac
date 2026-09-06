@@ -1,5 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
-import { APP_CORNER_RADIUS } from "@/style/appShape";
+import { APP_CORNER_RADIUS, FLOATING_EDGE_GAP } from "@/style/appShape";
 import { FLOATING_CORNER_VARIABLE } from "./floatingCorner";
 
 /**
@@ -14,12 +14,20 @@ import { FLOATING_CORNER_VARIABLE } from "./floatingCorner";
  * **Només s'aparta si hi ha alguna cosa de què apartar-se**: la reserva surt de
  * la variable que declara qui ocupa el racó (`useFloatingCorner`), i on no hi ha
  * cap control flotant —inici, registre, panell d'administració— l'avís es queda
- * als 8 px de MUI. Amb el desplaçament escrit a l'sx, aquelles pàgines
+ * enganxat als dos cantons. Amb el desplaçament escrit a l'sx, aquelles pàgines
  * ensenyaven un avís descentrat sense res que ho justifiqués.
+ *
+ * I s'ancora **on s'ancora tota la resta**: `FLOATING_EDGE_GAP`, no els 8 px que
+ * MUI posa per sota de `sm`. L'avís i el botó d'estat comparteixen la franja de
+ * baix, i amb dues bases separades per 8 px es veien desalineats —l'avís queia
+ * més avall i més a prop del cantó esquerre que el botó del dret— sense que la
+ * diferència volgués dir res.
  */
 export const floatingSnackbarSx: SxProps<Theme> = (theme) => ({
   [theme.breakpoints.down("sm")]: {
-    right: `var(${FLOATING_CORNER_VARIABLE}, ${theme.spacing(1)})`,
+    bottom: FLOATING_EDGE_GAP,
+    left: FLOATING_EDGE_GAP,
+    right: `var(${FLOATING_CORNER_VARIABLE}, ${FLOATING_EDGE_GAP}px)`,
   },
 });
 
